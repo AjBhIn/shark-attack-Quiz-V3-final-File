@@ -6,6 +6,7 @@ import white_board as wt
 import question_answers as qs
 from datetime import datetime as dt
 import scene as sc
+import tracker as ds
 
 class Game:
     def __init__(self):
@@ -49,6 +50,17 @@ class Game:
         self.island = sc.Scene("island.png", (1042, 347))
         sc.scene_sprities.add(self.island)
 
+        # Distance covered
+        self.distance = 1000
+        self.var = f"Away from Shore {self.distance}m"
+
+        # Question on texts
+        self.question_on = 1 + len(qs.answer_check)
+        self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
+
+        self.evn = pg.USEREVENT + 1
+        pg.time.set_timer(self.evn, 2000)
+
     def looper(self):
         while True:
             for events in pg.event.get():
@@ -87,11 +99,20 @@ class Game:
                             qs.answers_spirit.add(qs.class_answer_list[self.question_number])
                             qs.question_ans_num = self.question_number
                             self.moving_to_next = False
+
+                            # Updating the question number
+                            self.question_on = len(qs.answer_check) + 1
     
                 else:
                     self.question_number = self.question_number
                     qs.question_ans_num = self.question_number
 
+                if events.type == self.evn:
+                    self.distance -= 100
+                    self.var = f"Away from Shore {self.distance}m"
+
+            # Updating question number
+            self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
                         
             # Putting colours on the window
             self.window.fill(self.window_bg)
@@ -100,6 +121,10 @@ class Game:
             # Putting the white board on the screen
             self.window.blit(wt.main_board.surface, (0, 347))
             wt.main_board.surface.blit(wt.display_board.surface, (0, 40))
+
+            # Dashboard
+            self.distance_text = ds.Dashboard(self.window, (22, 368), ds.jura_regular, self.var)
+            self.question_num_text = ds.Dashboard(self.window, (900, 368), ds.jura_regular, self.question_on_text)
 
             # Scene
             sc.scene_sprities.draw(self.window)
