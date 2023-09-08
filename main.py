@@ -54,9 +54,15 @@ class Game:
         self.distance = 1000
         self.var = f"Away from Shore {self.distance}m"
 
-        # Question on texts
+        # "Question on" texts
         self.question_on = 1 + len(qs.answer_check)
         self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
+
+        # Display
+        self.display_string = "Finished"
+        self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
+        self.display_background = pg.image.load("display.png").convert_alpha()
+        self.display_background_rect = self.display_background.get_rect(center = (int(self.window.get_width()/2), 368))
 
         self.evn = pg.USEREVENT + 1
         pg.time.set_timer(self.evn, 2000)
@@ -110,6 +116,7 @@ class Game:
                 if events.type == self.evn:
                     self.distance -= 100
                     self.var = f"Away from Shore {self.distance}m"
+                    self.display_string = "Hello"
 
             # Updating question number
             self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
@@ -125,6 +132,8 @@ class Game:
             # Dashboard
             self.distance_text = ds.Dashboard(self.window, (22, 368), ds.jura_regular, self.var)
             self.question_num_text = ds.Dashboard(self.window, (900, 368), ds.jura_regular, self.question_on_text)
+            self.window.blit(self.display_background, self.display_background_rect)
+            self.display_text = ds.Dashboard(self.window, (self.display_string_x, 368), ds.jura_medium, self.display_string, ds.display_text_color)
 
             # Scene
             sc.scene_sprities.draw(self.window)
