@@ -32,5 +32,8 @@ class Swimmer(pg.sprite.Sprite):
         self.image = pg.image.load(img).convert_alpha()
         self.rect = self.image.get_rect(midright = placement)
 
+    def update(self, x):
+         self.rect.x = x - self.image.get_width()
+
 
 swimmer_sprite = pg.sprite.GroupSingle()

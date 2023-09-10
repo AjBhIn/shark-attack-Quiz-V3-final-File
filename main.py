@@ -9,6 +9,53 @@ import scene as sc
 import tracker as ds
 
 class Game:
+
+    def next_question(self):
+        if self.question_number < (len(qs.class_question_list) - 1): # Minusing 2 from the original list of question to keep it below the last question:
+            if self.moving_to_next:
+                # Checking if it is time to move to next question
+                self.current_time = dt.now()
+                self.time = (self.current_time - self.button_pressed_time)
+
+                if int(self.time.total_seconds()) > self.next_ques_in:
+                    pass
+                else:
+                    while True:
+                        self.current_time = dt.now()
+                        self.time = (self.current_time - self.button_pressed_time)
+                        if int(self.time.total_seconds()) > self.next_ques_in:
+                            break
+
+                if int(self.time.total_seconds()) > self.next_ques_in:
+                    qs.class_question_list[self.question_number].next_question()
+                    qs.class_answer_list[self.question_number][0].next_ans()
+                    qs.class_answer_list[self.question_number][1].next_ans()
+                    qs.class_answer_list[self.question_number][2].next_ans()
+                    qs.class_answer_list[self.question_number][3].next_ans()
+                    qs.button_states[0] = False
+                    qs.button_states[1] = False
+                    qs.button_states[2] = False
+                    qs.button_states[3] = False
+                    self.question_number += 1
+                    self.updates_ques_num = self.question_number
+                    qs.question_spirit.add(qs.class_question_list[self.question_number])
+                    qs.answers_spirit.add(qs.class_answer_list[self.question_number])
+                    qs.question_ans_num = self.question_number
+                    self.moving_to_next = False
+
+                    # Updating the question number
+                    self.question_on = len(qs.answer_check) + 1
+
+                    # Display update
+                    self.display_string = "NONE"
+                    self.display_text_color = self.correct_answer_color
+                    self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
+                    self.display_text_placement = (self.display_string_x, 368)
+
+        else:
+            self.question_number = self.question_number
+            qs.question_ans_num = self.question_number
+
     def __init__(self):
         # Settings for the window
         self.WIDTH = 1042
@@ -54,9 +101,16 @@ class Game:
         # Adding shark
         self.shark_x_position = self.displacement
         self.shark_x_position_new = self.displacement
-        self.steps = 1 
+        self.shark_steps = 1 
         self.shark = sc.Shark("shark.png", (self.shark_x_position, 305))
         sc.shark_sprite.add(self.shark)
+
+        # Adding swimmer
+        self.swimmer_x_position = self.displacement * (self.num_shark_moves + 1)
+        self.swimmer_x_position_new = self.displacement * (self.num_shark_moves + 1)
+        self.swimmer_steps = 1
+        self.swimmer = sc.Swimmer("swim.png", (self.swimmer_x_position, 305))
+        sc.swimmer_sprite.add(self.swimmer)
 
         #Adding water
         self.water = sc.Scene("WATER.png", (1008, 347))
@@ -95,50 +149,51 @@ class Game:
                     pg.quit()
                     sys.exit()
                 if self.shark_x_position_new >= self.shark_x_position:
-                    if self.question_number < (len(qs.class_question_list) - 1): # Minusing 2 from the original list of question to keep it below the last question:
-                        if self.moving_to_next:
-                            # Checking if it is time to move to next question
-                            self.current_time = dt.now()
-                            self.time = (self.current_time - self.button_pressed_time)
+                    self.next_question()
+                    # if self.question_number < (len(qs.class_question_list) - 1): # Minusing 2 from the original list of question to keep it below the last question:
+                    #     if self.moving_to_next:
+                    #         # Checking if it is time to move to next question
+                    #         self.current_time = dt.now()
+                    #         self.time = (self.current_time - self.button_pressed_time)
 
-                            if int(self.time.total_seconds()) > self.next_ques_in:
-                                pass
-                            else:
-                                while True:
-                                    self.current_time = dt.now()
-                                    self.time = (self.current_time - self.button_pressed_time)
-                                    if int(self.time.total_seconds()) > self.next_ques_in:
-                                        break
+                    #         if int(self.time.total_seconds()) > self.next_ques_in:
+                    #             pass
+                    #         else:
+                    #             while True:
+                    #                 self.current_time = dt.now()
+                    #                 self.time = (self.current_time - self.button_pressed_time)
+                    #                 if int(self.time.total_seconds()) > self.next_ques_in:
+                    #                     break
 
-                            if int(self.time.total_seconds()) > self.next_ques_in:
-                                qs.class_question_list[self.question_number].next_question()
-                                qs.class_answer_list[self.question_number][0].next_ans()
-                                qs.class_answer_list[self.question_number][1].next_ans()
-                                qs.class_answer_list[self.question_number][2].next_ans()
-                                qs.class_answer_list[self.question_number][3].next_ans()
-                                qs.button_states[0] = False
-                                qs.button_states[1] = False
-                                qs.button_states[2] = False
-                                qs.button_states[3] = False
-                                self.question_number += 1
-                                self.updates_ques_num = self.question_number
-                                qs.question_spirit.add(qs.class_question_list[self.question_number])
-                                qs.answers_spirit.add(qs.class_answer_list[self.question_number])
-                                qs.question_ans_num = self.question_number
-                                self.moving_to_next = False
+                    #         if int(self.time.total_seconds()) > self.next_ques_in:
+                    #             qs.class_question_list[self.question_number].next_question()
+                    #             qs.class_answer_list[self.question_number][0].next_ans()
+                    #             qs.class_answer_list[self.question_number][1].next_ans()
+                    #             qs.class_answer_list[self.question_number][2].next_ans()
+                    #             qs.class_answer_list[self.question_number][3].next_ans()
+                    #             qs.button_states[0] = False
+                    #             qs.button_states[1] = False
+                    #             qs.button_states[2] = False
+                    #             qs.button_states[3] = False
+                    #             self.question_number += 1
+                    #             self.updates_ques_num = self.question_number
+                    #             qs.question_spirit.add(qs.class_question_list[self.question_number])
+                    #             qs.answers_spirit.add(qs.class_answer_list[self.question_number])
+                    #             qs.question_ans_num = self.question_number
+                    #             self.moving_to_next = False
 
-                                # Updating the question number
-                                self.question_on = len(qs.answer_check) + 1
+                    #             # Updating the question number
+                    #             self.question_on = len(qs.answer_check) + 1
 
-                                # Display update
-                                self.display_string = "NONE"
-                                self.display_text_color = self.correct_answer_color
-                                self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
-                                self.display_text_placement = (self.display_string_x, 368)
+                    #             # Display update
+                    #             self.display_string = "NONE"
+                    #             self.display_text_color = self.correct_answer_color
+                    #             self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
+                    #             self.display_text_placement = (self.display_string_x, 368)
         
-                    else:
-                        self.question_number = self.question_number
-                        qs.question_ans_num = self.question_number
+                    # else:
+                    #     self.question_number = self.question_number
+                    #     qs.question_ans_num = self.question_number
                 else:
                     pass
 
@@ -165,6 +220,7 @@ class Game:
 
             # Scene
             sc.shark_sprite.draw(self.window)
+            sc.swimmer_sprite.draw(self.window)
             sc.scene_sprities.draw(self.window)
             sc.scene_sprities.draw(self.window)
 
@@ -201,14 +257,24 @@ class Game:
                     self.display_text_color = self.correct_answer_color
                     self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
                     self.display_text_placement = (self.display_string_x, 368)
+                    # Also moves the swimmer
+                    self.swimmer_x_position += self.displacement
                     
 
             sc.shark_sprite.update(self.shark_x_position_new)
             if self.shark_x_position_new >= self.shark_x_position:
-                self.steps = self.steps
+                self.shark_steps = self.shark_steps
             else:
-                self.shark_x_position_new = self.displacement + self.steps
-                self.steps += 1
+                self.shark_x_position_new = self.displacement + self.shark_steps
+                self.shark_steps += 1
+
+
+            sc.swimmer_sprite.update(self.swimmer_x_position_new)
+            if self.swimmer_x_position_new >= self.swimmer_x_position:
+                self.swimmer_steps = self.swimmer_steps
+            else:
+                self.swimmer_x_position_new = (self.displacement * (self.num_shark_moves + 1)) + self.swimmer_steps
+                self.swimmer_steps += 1
 
             # Putting a custom cursor
             pg.mouse.set_cursor(self.cursor)
