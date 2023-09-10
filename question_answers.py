@@ -490,6 +490,7 @@ answers_spirit = pg.sprite.Group()
 # Question makers spirit version
 num_questions_answers = len(questions_list)
 actual_que_num = len(questions_list) - 2
+actual_que_num_v2 = len(questions_list) - 1
 class_question_list = []
 class_answer_list = []
 for Q_num in range(1, num_questions_answers):
