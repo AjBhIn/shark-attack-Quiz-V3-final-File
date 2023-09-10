@@ -42,10 +42,15 @@ class Game:
         self.next_ques_in = 2
         self.updates_ques_num = 0
         self.wrong_question_num = 0
+
+        # Adding shark
+        self.shark = sc.Shark("shark.png", (120, 305))
+        sc.shark_sprite.add(self.shark)
+
         #Adding water
         self.water = sc.Scene("WATER.png", (1008, 347))
         sc.scene_sprities.add(self.water)
-
+        
         # Adding island
         self.island = sc.Scene("island.png", (1042, 347))
         sc.scene_sprities.add(self.island)
@@ -59,8 +64,13 @@ class Game:
         self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
 
         # Display
+            # Colors
+        self.correct_answer_color = (247, 255, 247)
+        self.wrong_answer_color = (255, 107, 107)
+        self.display_text_color = self.correct_answer_color
         self.display_string = "Finished"
         self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
+        self.display_text_placement = (self.display_string_x, 368)
         self.display_background = pg.image.load("display.png").convert_alpha()
         self.display_background_rect = self.display_background.get_rect(center = (int(self.window.get_width()/2), 368))
 
@@ -108,6 +118,12 @@ class Game:
 
                             # Updating the question number
                             self.question_on = len(qs.answer_check) + 1
+
+                            # Display update
+                            self.display_string = "NONE"
+                            self.display_text_color = self.correct_answer_color
+                            self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
+                            self.display_text_placement = (self.display_string_x, 368)
     
                 else:
                     self.question_number = self.question_number
@@ -116,7 +132,6 @@ class Game:
                 if events.type == self.evn:
                     self.distance -= 100
                     self.var = f"Away from Shore {self.distance}m"
-                    self.display_string = "Hello"
 
             # Updating question number
             self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
@@ -133,9 +148,10 @@ class Game:
             self.distance_text = ds.Dashboard(self.window, (22, 368), ds.jura_regular, self.var)
             self.question_num_text = ds.Dashboard(self.window, (900, 368), ds.jura_regular, self.question_on_text)
             self.window.blit(self.display_background, self.display_background_rect)
-            self.display_text = ds.Dashboard(self.window, (self.display_string_x, 368), ds.jura_medium, self.display_string, ds.display_text_color)
+            self.display_text = ds.Dashboard(self.window, self.display_text_placement, ds.jura_medium, self.display_string, self.display_text_color )
 
             # Scene
+            sc.shark_sprite.draw(self.window)
             sc.scene_sprities.draw(self.window)
             sc.scene_sprities.draw(self.window)
 
@@ -156,6 +172,16 @@ class Game:
             
             if button_pressed_1 == True or button_pressed_2 == True or button_pressed_3 == True or button_pressed_4 == True:
                 self.button_pressed_time = dt.now()
+                if qs.answer_check[len(qs.answer_check) - 1] == False:
+                    self.display_string = "Wrong"
+                    self.display_text_color = self.wrong_answer_color
+                    self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
+                    self.display_text_placement = (self.display_string_x, 368)
+                else:
+                    self.display_string = "Correct"
+                    self.display_text_color = self.correct_answer_color
+                    self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
+                    self.display_text_placement = (self.display_string_x, 368)
 
 
             # Putting a custom cursor

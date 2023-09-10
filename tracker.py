@@ -10,8 +10,6 @@ jura_medium = pg.font.Font("Jura-Medium.ttf", 25)
 # Text color
 text_color = (26, 83, 92)
 
-# Colors
-display_text_color = (247, 255, 247)
 
 class Dashboard:
     def __init__(self, window, text_placement, font_style, var, text_color = text_color):
