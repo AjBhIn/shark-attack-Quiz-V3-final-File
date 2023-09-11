@@ -406,7 +406,6 @@ class AnswerMaker_D(pg.sprite.Sprite, SettingsAnswer):
                 else:
                     pass
 
-
                 class_answer_list[question_ans_num][3].image.blit(correct_icon, correct_icon_pla)
                 class_answer_list[question_ans_num][1].image.set_alpha(127)
                 class_answer_list[question_ans_num][1].image.blit(wrong_icon, wrong_icon_pla)
