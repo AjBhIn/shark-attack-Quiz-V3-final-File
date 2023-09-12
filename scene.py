@@ -21,6 +21,7 @@ class Shark(pg.sprite.Sprite):
 
     def update(self, x):
             self.rect.x = x - self.image.get_width()
+            print(self.rect.x)
 
 
 shark_sprite = pg.sprite.GroupSingle()

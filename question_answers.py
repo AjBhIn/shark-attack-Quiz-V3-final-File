@@ -17,6 +17,8 @@ ORANGE_COLOR = (255, 184, 0)
 GREEN_COLOUR = (39, 239, 83)
 BLUE_COLOUR = (20, 153, 228)
 opt_colr_list = [RED_COLOUR, ORANGE_COLOR, GREEN_COLOUR, BLUE_COLOUR]
+CORRECT_ANSWER_COLOR = (20, 228, 165)
+WRONG_ANSWER_COLOR = (219,0,0)
 
 pg.init()
 
@@ -86,6 +88,7 @@ class AnswerMaker_A(pg.sprite.Sprite, SettingsAnswer):
 
     def update(self):
         button_pressed = self.cliked()
+        print(button_pressed)
         return button_pressed
 
     def next_ans(self):
@@ -405,8 +408,7 @@ class AnswerMaker_D(pg.sprite.Sprite, SettingsAnswer):
                     print()
                 else:
                     pass
-
-                class_answer_list[question_ans_num][3].image.blit(correct_icon, correct_icon_pla)
+                class_answer_list[question_ans_num][3].image.fill(())
                 class_answer_list[question_ans_num][1].image.set_alpha(127)
                 class_answer_list[question_ans_num][1].image.blit(wrong_icon, wrong_icon_pla)
                 class_answer_list[question_ans_num][1].image.blit(wrong_icon, wrong_icon_pla)
