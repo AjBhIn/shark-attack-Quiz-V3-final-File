@@ -24,7 +24,7 @@ class Shark(pg.sprite.Sprite):
             print(self.rect.x)
 
 
-shark_sprite = pg.sprite.GroupSingle()
+shark_sprite = pg.sprite.Group()
 
 class Swimmer(pg.sprite.Sprite):
     def __init__(self, img, placement):
