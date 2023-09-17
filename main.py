@@ -47,8 +47,12 @@ class Game:
             self.question_number = self.question_number
             qs.question_ans_num = self.question_number
 
-    def Collied(self):
+    def Shark_collied(self):
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.shark_sprite, False):
+            print("yes")
+
+    def Island_collied(self):
+        if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.island_sprities, False):
             print("yes")
 
     def Main_stage(self):
@@ -89,11 +93,12 @@ class Game:
         # Scene
         sc.shark_sprite.draw(self.window)
         sc.swimmer_sprite.draw(self.window)
-        sc.scene_sprities.draw(self.window)
-        sc.scene_sprities.draw(self.window)
+        sc.ocean_sprities.draw(self.window)
+        sc.island_sprities.draw(self.window)
 
         # Scenes update
-        sc.scene_sprities.update()
+        sc.ocean_sprities.update()
+        sc.island_sprities.update()
 
         # Putting the questions on the screen
         qs.question_spirit.draw(self.window)
@@ -206,12 +211,12 @@ class Game:
         sc.swimmer_sprite.add(self.swimmer)
 
         #Adding water
-        self.water = sc.Scene("WATER.png", (1008, 347))
-        sc.scene_sprities.add(self.water)
+        self.ocean = sc.Ocean("WATER.png", (1008, 347))
+        sc.ocean_sprities.add(self.ocean)
         
         # Adding island
-        self.island = sc.Scene("island.png", (1042, 347))
-        sc.scene_sprities.add(self.island)
+        self.island = sc.Island("island.png", (1042, 347))
+        sc.island_sprities.add(self.island)
 
         # Distance covered
         self.distance = 1000
@@ -238,6 +243,8 @@ class Game:
     def looper(self):
         while True:
             self.Main_stage()
+            self.Shark_collied()
+            self.Island_collied()
             self.clock.tick(self.FPS)
 
 if __name__ == "__main__":

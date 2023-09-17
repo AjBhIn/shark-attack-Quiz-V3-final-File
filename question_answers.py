@@ -88,7 +88,6 @@ class AnswerMaker_A(pg.sprite.Sprite, SettingsAnswer):
 
     def update(self):
         button_pressed = self.cliked()
-        print(button_pressed)
         return button_pressed
 
     def next_ans(self):
