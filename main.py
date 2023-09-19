@@ -12,11 +12,13 @@ import ending as ed
 class Game:
 
     def Next_question(self):
-        if self.question_number < (len(qs.class_question_list) - 1): # Minusing 2 from the original list of question to keep it below the last question:
+        print("Next Question here")
+        if self.question_number < (len(qs.class_question_list) - 1): # Minusing 1 from the original list of question to keep it below the last question:
             if self.moving_to_next:
                 # Checking if it is time to move to next question
                 self.current_time = dt.now()
                 self.time = (self.current_time - self.button_pressed_time)
+                print(self.time)
 
                 if int(self.time.total_seconds()) > self.next_ques_in:
                     pass
@@ -24,7 +26,7 @@ class Game:
                     while True:
                         self.current_time = dt.now()
                         self.time = (self.current_time - self.button_pressed_time)
-                        if int(self.time.total_seconds()) > self.next_ques_in:
+                        if self.time.total_seconds() > self.next_ques_in:
                             break
 
                 if int(self.time.total_seconds()) > self.next_ques_in:
@@ -44,9 +46,10 @@ class Game:
                     qs.question_ans_num = self.question_number
                     self.moving_to_next = False
 
-                    # Updatint the dashboard
+                    # Updating the dashboard
                     self.question_on = 1 + len(qs.answer_check)
                     self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
+                    self.var = f"Away from Shore {self.distance}m"
 
         else:
             self.question_number = self.question_number
@@ -70,23 +73,24 @@ class Game:
                 ed.ending_string_sprit.add(self.passed_description)
                 ed.ending_score_sprit.add(self.passed_rate)
 
+                # print(pg.time.get_ticks())
+
     def Main_stage(self):
         for events in pg.event.get():
                 if events.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
 
-                if events.type == self.evn:
-                    self.distance -= 100
-                    self.var = f"Away from Shore {self.distance}m"
-
-                if self.moving_to_next:
-                    if self.display_string == "Wrong":
-                        if self.shark_x_position_new >= self.shark_x_position:
-                            self.Next_question()
-                    elif self.display_string == "Correct":
-                        if self.swimmer_x_position_new >= self.swimmer_x_position:
-                            self.Next_question()
+                if events.type == self.next_que_event:
+                    print("yess")
+                    if self.moving_to_next:
+                        if self.display_string == "Wrong":
+                            if self.shark_x_position_new >= self.shark_x_position:
+                                print("Now moving to Next Question")
+                                self.Next_question()
+                        elif self.display_string == "Correct":
+                            if self.swimmer_x_position_new >= self.swimmer_x_position:
+                                self.Next_question()
 
         # Updating question number
         self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
@@ -140,6 +144,9 @@ class Game:
 
         if True in qs.button_states:
             self.moving_to_next = True
+            # Telling the computer put an event for the computer can detect an even easily in the event section
+            pg.event.post(pg.event.Event(self.next_que_event))
+
         
         if button_pressed_1 == True or button_pressed_2 == True or button_pressed_3 == True or button_pressed_4 == True:
             self.button_pressed_time = dt.now()
@@ -158,6 +165,13 @@ class Game:
                 self.display_text_placement = (self.display_string_x, 368)
                 # Also moves the swimmer
                 self.swimmer_x_position += self.displacement
+
+                # Updating the distance
+                self.distance -= self.displacement
+                if self.distance < 10:
+                    self.distance = 0
+                else:
+                    pass
             else:
                 pass
 
@@ -177,7 +191,6 @@ class Game:
                 self.shark_x_position_new += int(self.shark_steps)
                 self.shark_steps += int(0.9)
             
-
         # Putting a custom cursor
         pg.mouse.set_cursor(self.cursor)
 
@@ -214,7 +227,7 @@ class Game:
         self.total_question_len = qs.num_questions_answers - 2
         self.current_time = 0
         self.button_pressed_time = 0
-        self.next_ques_in = 1
+        self.next_ques_in = 0
         self.updates_ques_num = 0
         self.wrong_question_num = 0
 
@@ -227,7 +240,6 @@ class Game:
 
         # The Equation for dividing the arean in interger
         self.displacement = int(self.water_width/(self.total_questions + self.num_shark_moves))
-        print(self.displacement)
 
         # Adding shark
         self.shark_x_position = self.displacement
@@ -252,7 +264,7 @@ class Game:
         sc.island_sprities.add(self.island)
 
         # Distance covered
-        self.distance = 1000
+        self.distance = self.water_width - self.swimmer_x_position
         self.var = f"Away from Shore {self.distance}m"
 
         # "Question on" texts
@@ -280,8 +292,8 @@ class Game:
         self.display_background = pg.image.load("display.png").convert_alpha()
         self.display_background_rect = self.display_background.get_rect(center = (int(self.window.get_width()/2), 368))
 
-        self.evn = pg.USEREVENT + 1
-        pg.time.set_timer(self.evn, 2000)
+        # User event to for moving to Next Question
+        self.next_que_event = pg.USEREVENT + 1
 
     def looper(self):
         while True:
