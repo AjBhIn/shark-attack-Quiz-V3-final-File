@@ -44,6 +44,10 @@ class Game:
                     qs.question_ans_num = self.question_number
                     self.moving_to_next = False
 
+                    # Updatint the dashboard
+                    self.question_on = 1 + len(qs.answer_check)
+                    self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
+
         else:
             self.question_number = self.question_number
             qs.question_ans_num = self.question_number
@@ -56,12 +60,15 @@ class Game:
 
     def Shark_collied(self):
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.shark_sprite, False):
-            ed.ending_string_sprit.add(ed.failed_string)
+            ed.ending_string_sprit.add(self.failed_string)
+            print('yes')
 
     def Island_collied(self):
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.island_sprities, False):
-            ed.ending_string_sprit.add(ed.passed_string)
-            print("yes")
+                # Adding the instance to game (not displaying them yet)
+                ed.ending_string_sprit.add(self.passed_string)
+                ed.ending_string_sprit.add(self.passed_description)
+                ed.ending_score_sprit.add(self.passed_rate)
 
     def Main_stage(self):
         for events in pg.event.get():
@@ -103,8 +110,17 @@ class Game:
         sc.swimmer_sprite.draw(self.window)
         sc.ocean_sprities.draw(self.window)
         sc.island_sprities.draw(self.window)
+
+        # Finishing the text
         ed.ending_string_sprit.draw(self.window)
-        ed.ending_string_sprit.draw(self.window)
+        ed.ending_score_sprit.draw(self.window)
+
+        # Putting the results
+        self.score = qs.answer_check.count(True)
+        self.passed_rate_text = f"{self.finished_game_in}s   {self.score}/{self.total_questions}"
+        
+        # Updating finishing text
+        ed.ending_score_sprit.update(self.passed_rate_text)
 
         # Scenes update
         sc.ocean_sprities.update()
@@ -243,7 +259,17 @@ class Game:
         self.question_on = 1 + len(qs.answer_check)
         self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
 
-        # Display
+        # Ending Text
+        # Instance of class
+        self.finished_game_in = 0
+        self.score = 0
+        self.passed_rate_text = f"{self.finished_game_in}s   {self.score}/{self.total_questions}"
+        self.failed_string =  ed.Endingtext("YOU DIED", 1042, 165)
+        self.passed_string =  ed.Endingtext("JAWS ESCAPED", 1042, 155)
+        self.passed_description =  ed.Endingtext("You Have Escaped the Jaws in", 1042, 210, 18)
+        self.passed_rate =  ed.Scoretext(self.passed_rate_text, 1042, 245, 35)
+
+        # Displayed.
             # Colors
         self.correct_answer_color = (247, 255, 247)
         self.wrong_answer_color = (255, 107, 107)

@@ -25,19 +25,4 @@ class Dashboard:
         self.window.blit(self.text, self.text_placement)
 
 
-# class Display:
-#     def __init__(self, font_style, display_text, text_color, display_color = display_color):
-
-#         # Text Settings
-#         self.display_text = display_text
-#         self.anitalise = True
-#         self.display = pg.image.load()
-#         self.display.fill(display_color)
-#         self.rect = self.display.get_rect(midleft = (435, 368))
-#         self.font_style = font_style
-
-#         self.display_text =  self.font_style.render(self.display_text, self.anitalise, text_color)
-#         self.display_text_placement = self.display_text.get_rect(center = (int(self.display.get_width()/2), int(self.display.get_height()/2)))
-#         self.display.blit(self.display_text, self.display_text_placement)
-
 
