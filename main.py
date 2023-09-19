@@ -121,7 +121,7 @@ class Game:
 
         # Putting the results
         self.score = qs.answer_check.count(True)
-        self.passed_rate_text = f"{self.finished_game_in}s   {self.score}/{self.total_questions}"
+        self.passed_rate_text = f"{self.finished_game_in}s"
         
         # Updating finishing text
         ed.ending_score_sprit.update(self.passed_rate_text)
@@ -227,7 +227,7 @@ class Game:
         self.total_question_len = qs.num_questions_answers - 2
         self.current_time = 0
         self.button_pressed_time = 0
-        self.next_ques_in = 0
+        self.next_ques_in = 2
         self.updates_ques_num = 0
         self.wrong_question_num = 0
 
@@ -267,15 +267,13 @@ class Game:
         self.distance = self.water_width - self.swimmer_x_position
         self.var = f"Away from Shore {self.distance}m"
 
-        # "Question on" texts
-        self.question_on = 1 + len(qs.answer_check)
-        self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
+        # Mistakes texts
+        self.question_on_text = f"Mistakes {0}/{self.num_shark_moves - 1}"
 
         # Ending Text
         # Instance of class
         self.finished_game_in = 0
-        self.score = 0
-        self.passed_rate_text = f"{self.finished_game_in}s   {self.score}/{self.total_questions}"
+        self.passed_rate_text = f"{self.finished_game_in}s"
         self.failed_string =  ed.Endingtext("YOU DIED", 1042, 165)
         self.passed_string =  ed.Endingtext("JAWS ESCAPED", 1042, 155)
         self.passed_description =  ed.Endingtext("You Have Escaped the Jaws in", 1042, 210, 18)
