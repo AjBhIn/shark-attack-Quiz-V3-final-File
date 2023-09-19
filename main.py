@@ -7,6 +7,7 @@ import question_answers as qs
 from datetime import datetime as dt
 import scene as sc
 import tracker as ds
+import ending as ed
 
 class Game:
 
@@ -46,13 +47,20 @@ class Game:
         else:
             self.question_number = self.question_number
             qs.question_ans_num = self.question_number
+            if self.shark_x_position_new == self.swimmer_x_position_new:
+                print("shark as eaten")
+            elif self.swimmer_x_position_new >= int(self.water_width - 20):
+                print("Island Passed")
+            else:
+                self.in_middle = True
 
     def Shark_collied(self):
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.shark_sprite, False):
-            print("yes")
+            ed.ending_string_sprit.add(ed.failed_string)
 
     def Island_collied(self):
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.island_sprities, False):
+            ed.ending_string_sprit.add(ed.passed_string)
             print("yes")
 
     def Main_stage(self):
@@ -95,6 +103,8 @@ class Game:
         sc.swimmer_sprite.draw(self.window)
         sc.ocean_sprities.draw(self.window)
         sc.island_sprities.draw(self.window)
+        ed.ending_string_sprit.draw(self.window)
+        ed.ending_string_sprit.draw(self.window)
 
         # Scenes update
         sc.ocean_sprities.update()
@@ -144,6 +154,12 @@ class Game:
         if self.swimmer_x_position_new < self.swimmer_x_position:
             self.swimmer_x_position_new += int(self.swimmer_steps)
             self.swimmer_steps += int(0.1)
+
+        if self.in_middle:
+            sc.shark_sprite.update(self.shark_x_position_new)
+            if self.shark_x_position_new < self.swimmer_x_position_new:
+                self.shark_x_position_new += int(self.shark_steps)
+                self.shark_steps += int(0.9)
             
 
         # Putting a custom cursor
@@ -191,6 +207,7 @@ class Game:
         self.total_questions = qs.actual_que_num_v2
         print(self.total_questions)
         self.num_shark_moves = 2
+        self.in_middle = False
 
         # The Equation for dividing the arean in interger
         self.displacement = int(self.water_width/(self.total_questions + self.num_shark_moves))
