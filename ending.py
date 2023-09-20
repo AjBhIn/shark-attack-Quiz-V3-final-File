@@ -64,3 +64,16 @@ class Scoretext(pg.sprite.Sprite):
 # Sprite for text
 ending_score_sprit = pg.sprite.Group()
 
+
+# Dead image sprite
+class Deadscene(pg.sprite.Sprite):
+    def __init__(self, img, placement):
+        super().__init__()
+        self.placement = placement
+        self.image = pg.image.load(img).convert_alpha()
+        self.rect = self.image.get_rect(topleft = self.placement)
+
+    def update(self, x):
+            self.rect.x = x - self.image.get_width()
+
+dead_sprite = pg.sprite.GroupSingle()

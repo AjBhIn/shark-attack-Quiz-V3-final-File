@@ -12,14 +12,11 @@ import ending as ed
 class Game:
 
     def Next_question(self):
-        print("Next Question here")
         if self.question_number < (len(qs.class_question_list) - 1): # Minusing 1 from the original list of question to keep it below the last question:
             if self.moving_to_next:
                 # Checking if it is time to move to next question
                 self.current_time = dt.now()
                 self.time = (self.current_time - self.button_pressed_time)
-                print(self.time)
-
                 if int(self.time.total_seconds()) > self.next_ques_in:
                     pass
                 else:
@@ -47,24 +44,23 @@ class Game:
                     self.moving_to_next = False
 
                     # Updating the dashboard
-                    self.question_on = 1 + len(qs.answer_check)
-                    self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
+                    self.question_on_text = f"Mistakes {qs.answer_check.count(False)}/{self.num_shark_moves - 1}"
                     self.var = f"Away from Shore {self.distance}m"
 
         else:
             self.question_number = self.question_number
             qs.question_ans_num = self.question_number
             if self.shark_x_position_new == self.swimmer_x_position_new:
-                print("shark as eaten")
+                pass
             elif self.swimmer_x_position_new >= int(self.water_width - 20):
-                print("Island Passed")
+                pass
             else:
                 self.in_middle = True
 
     def Shark_collied(self):
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.shark_sprite, False):
+            ed.dead_sprite.add(self.blood_scene)
             ed.ending_string_sprit.add(self.failed_string)
-            print('yes')
 
     def Island_collied(self):
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.island_sprities, False):
@@ -72,8 +68,8 @@ class Game:
                 ed.ending_string_sprit.add(self.passed_string)
                 ed.ending_string_sprit.add(self.passed_description)
                 ed.ending_score_sprit.add(self.passed_rate)
-
-                # print(pg.time.get_ticks())
+                self.finished_game_in = int(pg.time.get_ticks() // 1000)
+                self.passed_rate_text = f"{self.finished_game_in}s"
 
     def Main_stage(self):
         for events in pg.event.get():
@@ -82,18 +78,13 @@ class Game:
                     sys.exit()
 
                 if events.type == self.next_que_event:
-                    print("yess")
                     if self.moving_to_next:
                         if self.display_string == "Wrong":
                             if self.shark_x_position_new >= self.shark_x_position:
-                                print("Now moving to Next Question")
                                 self.Next_question()
                         elif self.display_string == "Correct":
                             if self.swimmer_x_position_new >= self.swimmer_x_position:
                                 self.Next_question()
-
-        # Updating question number
-        self.question_on_text = f"Question {self.question_on}/{len(qs.class_question_list)}"
                     
         # Putting colours on the window
         self.window.fill(self.window_bg)
@@ -116,6 +107,7 @@ class Game:
         sc.island_sprities.draw(self.window)
 
         # Finishing the text
+        ed.dead_sprite.draw(self.window)
         ed.ending_string_sprit.draw(self.window)
         ed.ending_score_sprit.draw(self.window)
 
@@ -123,8 +115,9 @@ class Game:
         self.score = qs.answer_check.count(True)
         self.passed_rate_text = f"{self.finished_game_in}s"
         
-        # Updating finishing text
+        # Updating finishing text and Finishing scene
         ed.ending_score_sprit.update(self.passed_rate_text)
+        ed.dead_sprite.update()
 
         # Scenes update
         sc.ocean_sprities.update()
@@ -147,7 +140,6 @@ class Game:
             # Telling the computer put an event for the computer can detect an even easily in the event section
             pg.event.post(pg.event.Event(self.next_que_event))
 
-        
         if button_pressed_1 == True or button_pressed_2 == True or button_pressed_3 == True or button_pressed_4 == True:
             self.button_pressed_time = dt.now()
             if qs.answer_check[len(qs.answer_check) - 1] == False:
@@ -234,7 +226,6 @@ class Game:
         # Settings movement for shark and player
         self.water_width = 940
         self.total_questions = qs.actual_que_num_v2
-        print(self.total_questions)
         self.num_shark_moves = 2
         self.in_middle = False
 
@@ -278,6 +269,9 @@ class Game:
         self.passed_string =  ed.Endingtext("JAWS ESCAPED", 1042, 155)
         self.passed_description =  ed.Endingtext("You Have Escaped the Jaws in", 1042, 210, 18)
         self.passed_rate =  ed.Scoretext(self.passed_rate_text, 1042, 245, 35)
+
+        # Ending scene images and instances
+        self.blood_scene = ed.Deadscene("dead image.png", (0, -200))
 
         # Displayed.
             # Colors
