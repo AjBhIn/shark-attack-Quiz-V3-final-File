@@ -61,6 +61,13 @@ class Game:
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.shark_sprite, False):
             ed.dead_sprite.add(self.blood_scene)
             ed.ending_string_sprit.add(self.failed_string)
+            # Updatig the position of the finishing scene
+
+            self.dead_image_y += 1
+            if self.dead_image_y >= 0:
+                self.dead_image_y = 0
+            else:
+                pass
 
     def Island_collied(self):
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.island_sprities, False):
@@ -68,8 +75,18 @@ class Game:
                 ed.ending_string_sprit.add(self.passed_string)
                 ed.ending_string_sprit.add(self.passed_description)
                 ed.ending_score_sprit.add(self.passed_rate)
-                self.finished_game_in = int(pg.time.get_ticks() // 1000)
-                self.passed_rate_text = f"{self.finished_game_in}s"
+
+                # This statements will make sure to run code only onces
+                if self.collied_island:
+                    self.finished_game_in = int(pg.time.get_ticks() // 1000)
+                    self.passed_rate_text = f"{self.finished_game_in}s"
+                    self.collied_island = False
+
+                    # Reseting 
+                    qs.question_spirit.empty()
+                    qs.question_spirit.clear(self.window, self.window)
+                    qs.answers_spirit.empty()
+                    qs.answers_spirit.clear(self.window, self.window)
 
     def Main_stage(self):
         for events in pg.event.get():
@@ -117,7 +134,7 @@ class Game:
         
         # Updating finishing text and Finishing scene
         ed.ending_score_sprit.update(self.passed_rate_text)
-        ed.dead_sprite.update()
+        ed.dead_sprite.update(self.dead_image_y)
 
         # Scenes update
         sc.ocean_sprities.update()
@@ -251,6 +268,7 @@ class Game:
         sc.ocean_sprities.add(self.ocean)
         
         # Adding island
+        self.collied_island = True
         self.island = sc.Island("island.png", (1042, 347))
         sc.island_sprities.add(self.island)
 
@@ -271,7 +289,8 @@ class Game:
         self.passed_rate =  ed.Scoretext(self.passed_rate_text, 1042, 245, 35)
 
         # Ending scene images and instances
-        self.blood_scene = ed.Deadscene("dead image.png", (0, -200))
+        self.dead_image_y = -200
+        self.blood_scene = ed.Deadscene("dead image.png", (0, self.dead_image_y))
 
         # Displayed.
             # Colors

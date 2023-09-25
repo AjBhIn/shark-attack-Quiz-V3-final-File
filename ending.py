@@ -73,7 +73,7 @@ class Deadscene(pg.sprite.Sprite):
         self.image = pg.image.load(img).convert_alpha()
         self.rect = self.image.get_rect(topleft = self.placement)
 
-    def update(self, x):
-            self.rect.x = x - self.image.get_width()
+    def update(self, y):
+            self.rect.y = y
 
 dead_sprite = pg.sprite.GroupSingle()
