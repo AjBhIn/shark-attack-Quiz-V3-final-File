@@ -62,6 +62,10 @@ class Game:
             ed.dead_sprite.add(self.blood_scene)
             ed.ending_string_sprit.add(self.failed_string)
             ex.exit_bt_sprite.add(self.exit_button)
+            if self.question_number < 3:
+                ex.exit_message_sprite.add(self.exit_message_3)
+            else:
+                ex.exit_message_sprite.add(self.exit_message_2)
 
             # Updatig the position of the finishing scene
             self.dead_image_y += 1
@@ -87,6 +91,7 @@ class Game:
                 ed.ending_string_sprit.add(self.passed_string)
                 ed.ending_string_sprit.add(self.passed_description)
                 ed.ending_score_sprit.add(self.passed_rate)
+                ex.exit_message_sprite.add(self.exit_message_1)
                 ex.exit_bt_sprite.add(self.exit_button)
 
                 # This statements will make sure to run code only onces
@@ -149,6 +154,7 @@ class Game:
 
         # Exit screen draw
         ex.exit_bt_sprite.draw(self.window)
+        ex.exit_message_sprite.draw(self.window)
 
         # Putting the results
         self.score = qs.answer_check.count(True)
@@ -328,6 +334,9 @@ class Game:
 
         # Exit Screen
         self.exit_button  =  ex.Exitbutton(int(self.window.get_width()/2))
+        self.exit_message_1 = ex.Exitmessage("You have escaped the Jaws.", "Well Done!", "nerd.png")
+        self.exit_message_2 = ex.Exitmessage("Could not escape the Island.", "Try Again!", "crying.png")
+        self.exit_message_3 = ex.Exitmessage("Hmmmmmmmmmmmmmmmmmmmmmmm", "Try Again!", "angry.png")
 
         # User event to for moving to Next Question
         self.next_que_event = pg.USEREVENT + 1
