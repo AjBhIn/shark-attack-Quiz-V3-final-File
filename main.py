@@ -7,6 +7,7 @@ from datetime import datetime as dt
 import scene as sc
 import tracker as ds
 import ending as ed
+import exit as ex
 
 class Game:
 
@@ -60,6 +61,7 @@ class Game:
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.shark_sprite, False):
             ed.dead_sprite.add(self.blood_scene)
             ed.ending_string_sprit.add(self.failed_string)
+            ex.exit_bt_sprite.add(self.exit_button)
 
             # Updatig the position of the finishing scene
             self.dead_image_y += 1
@@ -70,11 +72,11 @@ class Game:
             # Reseting
             self.question_len_main = (len(qs.class_question_list) - 3)
             qs.answers_spirit.empty()
-            qs.answers_spirit.clear(self.window, self.window)
+            # qs.answers_spirit.clear(self.window, self.window)
             qs.question_spirit.empty()
-            qs.question_spirit.clear(self.window, self.window)
+            # qs.question_spirit.clear(self.window, self.window)
             qs.line_spirit.empty()
-            qs.line_spirit.clear(self.window, self.window)
+            # qs.line_spirit.clear(self.window, self.window)
 
             self.distance = "Unknown"
             self.var = f"Away from Shore {self.distance}m"
@@ -85,6 +87,7 @@ class Game:
                 ed.ending_string_sprit.add(self.passed_string)
                 ed.ending_string_sprit.add(self.passed_description)
                 ed.ending_score_sprit.add(self.passed_rate)
+                ex.exit_bt_sprite.add(self.exit_button)
 
                 # This statements will make sure to run code only onces
                 if self.collied_island:
@@ -94,13 +97,15 @@ class Game:
                     # Reseting
                     self.question_len_main = (len(qs.class_question_list) - 2)
                     qs.answers_spirit.empty()
-                    qs.answers_spirit.clear(self.window, self.window)
+                    # qs.answers_spirit.clear(self.window, self.window)
                     qs.question_spirit.empty()
-                    qs.question_spirit.clear(self.window, self.window)
+                    # qs.question_spirit.clear(self.window, self.window)
                     qs.line_spirit.empty()
-                    qs.line_spirit.clear(self.window, self.window)
+                    # qs.line_spirit.clear(self.window, self.window)
 
                     self.collied_island = False
+
+                self.var = f"Away from Shore {self.distance}m"
 
     def Main_stage(self):
         for events in pg.event.get():
@@ -141,6 +146,9 @@ class Game:
         ed.dead_sprite.draw(self.window)
         ed.ending_string_sprit.draw(self.window)
         ed.ending_score_sprit.draw(self.window)
+
+        # Exit screen draw
+        ex.exit_bt_sprite.draw(self.window)
 
         # Putting the results
         self.score = qs.answer_check.count(True)
@@ -317,6 +325,9 @@ class Game:
         self.display_text_placement = (self.display_string_x, 368)
         self.display_background = pg.image.load("display.png").convert_alpha()
         self.display_background_rect = self.display_background.get_rect(center = (int(self.window.get_width()/2), 368))
+
+        # Exit Screen
+        self.exit_button  =  ex.Exitbutton(int(self.window.get_width()/2))
 
         # User event to for moving to Next Question
         self.next_que_event = pg.USEREVENT + 1
