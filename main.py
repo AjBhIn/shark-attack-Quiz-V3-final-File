@@ -1,7 +1,6 @@
 # Importing take place here
 import pygame as pg
 import sys
-import race_track as rt
 import white_board as wt
 import question_answers as qs
 from datetime import datetime as dt
@@ -12,7 +11,7 @@ import ending as ed
 class Game:
 
     def Next_question(self):
-        if self.question_number < (len(qs.class_question_list) - 1): # Minusing 1 from the original list of question to keep it below the last question:
+        if self.question_number < self.question_len_main: # Minusing 1 from the original list of question to keep it below the last question:
             if self.moving_to_next:
                 # Checking if it is time to move to next question
                 self.current_time = dt.now()
@@ -69,6 +68,8 @@ class Game:
             else:
                 pass
 
+            self.distance = "Unknown"
+
     def Island_collied(self):
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.island_sprities, False):
                 # Adding the instance to game (not displaying them yet)
@@ -80,13 +81,17 @@ class Game:
                 if self.collied_island:
                     self.finished_game_in = int(pg.time.get_ticks() // 1000)
                     self.passed_rate_text = f"{self.finished_game_in}s"
-                    self.collied_island = False
 
-                    # Reseting 
-                    qs.question_spirit.empty()
-                    qs.question_spirit.clear(self.window, self.window)
+                    # Reseting
+                    self.question_len_main = (len(qs.class_question_list) - 2)
                     qs.answers_spirit.empty()
                     qs.answers_spirit.clear(self.window, self.window)
+                    qs.question_spirit.empty()
+                    qs.question_spirit.clear(self.window, self.window)
+                    qs.line_spirit.empty()
+                    qs.line_spirit.clear(self.window, self.window)
+
+                    self.collied_island = False
 
     def Main_stage(self):
         for events in pg.event.get():
@@ -230,9 +235,10 @@ class Game:
         self.image_of_cursor_rotate = pg.transform.rotozoom(self.image_of_cursor, 30, 1)  # rotating the image
         self.cursor = pg.cursors.Cursor((11, 12), self.image_of_cursor_rotate) # putting the image in cursor widget
 
-        # Telll the loop function if it is time for the next question as well stores te value for the next question number
+        # Tell the loop function if it is time for the next question as well stores te value for the next question number
         self.moving_to_next = False
         self.question_number = 0
+        self.question_len_main = (len(qs.class_question_list) - 1)
         self.total_question_len = qs.num_questions_answers - 2
         self.current_time = 0
         self.button_pressed_time = 0
