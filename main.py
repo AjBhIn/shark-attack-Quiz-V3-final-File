@@ -60,15 +60,24 @@ class Game:
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.shark_sprite, False):
             ed.dead_sprite.add(self.blood_scene)
             ed.ending_string_sprit.add(self.failed_string)
-            # Updatig the position of the finishing scene
 
+            # Updatig the position of the finishing scene
             self.dead_image_y += 1
             if self.dead_image_y >= 0:
                 self.dead_image_y = 0
             else:
                 pass
+            # Reseting
+            self.question_len_main = (len(qs.class_question_list) - 3)
+            qs.answers_spirit.empty()
+            qs.answers_spirit.clear(self.window, self.window)
+            qs.question_spirit.empty()
+            qs.question_spirit.clear(self.window, self.window)
+            qs.line_spirit.empty()
+            qs.line_spirit.clear(self.window, self.window)
 
             self.distance = "Unknown"
+            self.var = f"Away from Shore {self.distance}m"
 
     def Island_collied(self):
         if pg.sprite.spritecollide(sc.swimmer_sprite.sprite, sc.island_sprities, False):
