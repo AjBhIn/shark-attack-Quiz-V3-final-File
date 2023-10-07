@@ -73,14 +73,19 @@ class Game:
                 self.dead_image_y = 0
             else:
                 pass
+
+            self.question_on_text = f"Mistakes {qs.answer_check.count(False)}/{self.num_shark_moves - 1}"
             # Reseting
             self.question_len_main = (len(qs.class_question_list) - 3)
             qs.answers_spirit.empty()
-            # qs.answers_spirit.clear(self.window, self.window)
             qs.question_spirit.empty()
-            # qs.question_spirit.clear(self.window, self.window)
             qs.line_spirit.empty()
-            # qs.line_spirit.clear(self.window, self.window)
+
+            # Putting finsihed text on the display
+            self.display_string = "Finished"
+            self.display_text_color = self.correct_answer_color
+            self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
+            self.display_text_placement = (self.display_string_x, 368)
 
             self.distance = "Unknown"
             self.var = f"Away from Shore {self.distance}m"
@@ -99,14 +104,17 @@ class Game:
                     self.finished_game_in = int(pg.time.get_ticks() // 1000)
                     self.passed_rate_text = f"{self.finished_game_in}s"
 
+                    # Putting finsihed text on the display
+                    self.display_string = "Finished"
+                    self.display_text_color = self.correct_answer_color
+                    self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
+                    self.display_text_placement = (self.display_string_x, 368)
+
                     # Reseting
                     self.question_len_main = (len(qs.class_question_list) - 2)
                     qs.answers_spirit.empty()
-                    # qs.answers_spirit.clear(self.window, self.window)
                     qs.question_spirit.empty()
-                    # qs.question_spirit.clear(self.window, self.window)
                     qs.line_spirit.empty()
-                    # qs.line_spirit.clear(self.window, self.window)
 
                     self.collied_island = False
 
@@ -155,6 +163,7 @@ class Game:
         # Exit screen draw
         ex.exit_bt_sprite.draw(self.window)
         ex.exit_message_sprite.draw(self.window)
+        ex.exit_bt_sprite.update()
 
         # Putting the results
         self.score = qs.answer_check.count(True)
