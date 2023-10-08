@@ -1,4 +1,5 @@
 # Importing take place here
+import os
 import pygame as pg
 import sys
 import white_board as wt
@@ -217,8 +218,9 @@ class Game:
         self.exit_bt_pressed = self.exit_button.update()
 
         if self.exit_bt_pressed:
-            self.window_state = False
-            self.exit_button.bt_state = False
+            pg.quit()
+            sys.exit()
+            
 
         # Putting the results
         self.score = qs.answer_check.count(True)
@@ -319,7 +321,7 @@ class Game:
         self.window_intro_bg =  (26, 83, 92)
 
         # Window state like intro or game in active mode
-        self.window_state = False
+        self.window_state = 0
 
         # Custom cursor
         self.image_of_cursor = pg.image.load("cursor (1).png") # image of the cursor
@@ -446,19 +448,17 @@ class Game:
 
     def looper(self):
         while True:
-            if self.window_state == False:
+            if self.window_state == 0:
                 self.intro()
-            elif self.window_state == True:
+            elif self.window_state == 1:
                 self.Main_stage()
                 self.Shark_collied()
                 self.Island_collied()
+            elif self.window_state == 2:
+                break
             self.clock.tick(self.FPS)
+        pg.quit()
 
 if __name__ == "__main__":
     game = Game()
     game.looper()
-
-# Q3,(2x + 3x) = 10, x = 2,x = 5,x = 1,x = 2.5, x = 2
-# Q4,What is School Speed Zone ?,40,50 ,20 ,30,40
-# Q5,New Zealand Captical ?,Welligton,Auckland,Waikto,Christchurch,Welligton
-# Q6,Formula for Power ?,P = W/t,P = A/F,W = Fd,v = d/t,P = W/t

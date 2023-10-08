@@ -1,4 +1,3 @@
-from typing import Any
 import pygame as pg
 
 # Font styles
@@ -41,7 +40,7 @@ class Scoretext(pg.sprite.Sprite):
         self.antialise = True
         self.font_colr = font_colr
             # Using font initial
-        pg.font.init()
+        pg.init()
             # Font style
         self.ending_font_size = font_size
         self.jura_bold = pg.font.Font(font_style, self.ending_font_size)
