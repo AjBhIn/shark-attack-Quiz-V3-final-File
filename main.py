@@ -48,7 +48,8 @@ class Game:
 
         # Check if the play bt has been pressed
         if self.play_bt_pressed == True:
-            self.window.fill(self.window_intro_bg)
+            self.window_state = True
+            self.main_play_bt.bt_state = False
 
         # Updating bts
         self.play_bt_pressed = self.main_play_bt.update()
@@ -213,7 +214,11 @@ class Game:
         # Exit screen draw
         ex.exit_bt_sprite.draw(self.window)
         ex.exit_message_sprite.draw(self.window)
-        ex.exit_bt_sprite.update()
+        self.exit_bt_pressed = self.exit_button.update()
+
+        if self.exit_bt_pressed:
+            self.window_state = False
+            self.exit_button.bt_state = False
 
         # Putting the results
         self.score = qs.answer_check.count(True)
@@ -389,7 +394,7 @@ class Game:
         self.correct_answer_color = (247, 255, 247)
         self.wrong_answer_color = (255, 107, 107)
         self.display_text_color = self.correct_answer_color
-        self.display_string = "Finished"
+        self.display_string = ""
         self.display_string_x = int(self.window.get_width()/2) - int(ds.jura_medium.size(self.display_string)[0]/2)
         self.display_text_placement = (self.display_string_x, 368)
         self.display_background = pg.image.load("display.png").convert_alpha()
@@ -397,6 +402,7 @@ class Game:
 
         # Exit Screen
         self.exit_button  =  ex.Exitbutton(int(self.window.get_width()/2))
+        self.exit_bt_pressed = False
         self.exit_message_1 = ex.Exitmessage("You have escaped the Jaws.", "Well Done!", "nerd.png")
         self.exit_message_2 = ex.Exitmessage("Could not escape the Island.", "Try Again!", "crying.png")
         self.exit_message_3 = ex.Exitmessage("Hmmmmmmmmmmmmmmmmmmmmmmm", "Try Again!", "angry.png")
@@ -414,7 +420,7 @@ class Game:
         self.help_title =  inr.Introhelptext("Rules", 60, inr.jura_semibold, 26, 17)
         self.rule_1 =  inr.Introhelptext("- Reach the island by answering certain number of question", 20, inr.jura_medium, 26, 103)
         self.rule_2 =  inr.Introhelptext("- You are allowed to make one mistake only", 20, inr.jura_medium, 26, 152)
-        self.rule_3 =  inr.Introhelptext("- 30s time will provided for each question", 20, inr.jura_medium, 26, 201)
+        self.rule_3 =  inr.Introhelptext("- There is not time limite", 20, inr.jura_medium, 26, 201)
         self.rule_4 =  inr.Introhelptext("- Last Rule, have fun", 20, inr.jura_medium, 26, 250)
         # Intro help bg
         self.help_bg = inr.Helpbg("help_bg.png", 130, 216)
@@ -444,8 +450,8 @@ class Game:
                 self.intro()
             elif self.window_state == True:
                 self.Main_stage()
-            self.Shark_collied()
-            self.Island_collied()
+                self.Shark_collied()
+                self.Island_collied()
             self.clock.tick(self.FPS)
 
 if __name__ == "__main__":

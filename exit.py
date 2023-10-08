@@ -40,7 +40,8 @@ class Exitbutton(pg.sprite.Sprite):
         self.image.blit(self.text_rendering, self.text_pos)
     
     def update(self):
-        self.cliked()
+        bt_pressed = self.cliked()
+        return bt_pressed
     
     def cliked(self):
         mouse_pos = pg.mouse.get_pos()
@@ -48,10 +49,10 @@ class Exitbutton(pg.sprite.Sprite):
         if self.rect.collidepoint(mouse_pos):
             if mouse_left_bt_state == True:
                 self.bt_state = True
-            else:
-                if self.bt_state == True:
-                    print("yes")
-                    self.bt_state = False
+        if self.bt_state:
+            return True
+        else:
+            return False        
 
 
 exit_bt_sprite = pg.sprite.Group()
