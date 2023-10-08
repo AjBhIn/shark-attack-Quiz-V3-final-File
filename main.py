@@ -7,9 +7,59 @@ from datetime import datetime as dt
 import scene as sc
 import tracker as ds
 import ending as ed
+import intro as inr
 import exit as ex
 
 class Game:
+
+    # Intro function that where the games starts
+    def intro(self):
+        for events in pg.event.get():
+                if events.type == pg.QUIT:
+                    pg.quit()
+                    sys.exit()
+
+
+        # Putting objects on the window
+        self.window.fill(self.window_intro_bg)
+        # Adding the help bg
+        inr.help_bt_sprite.add(self.help_bt)
+        inr.intro_text_sprite.add(self.game_title)
+        inr.play_bt_sprite.draw(self.window)
+        if self.help_bt_pressed == True:
+            self.help_play_bt.bt_state = False
+            inr.intro_help_sprite.add(self.help_bg)
+            inr.help_play_bt_sprite.add(self.help_play_bt)
+            inr.intro_help_sprite.draw(self.window)
+            inr.help_play_bt_sprite.draw(self.window)
+            # inr.play_bt_sprite.empty()
+        if self.help__play_bt_pressed == True:
+            self.help_bt.bt_state = False
+            inr.play_bt_sprite.add(self.main_play_bt)
+            inr.play_bt_sprite.draw(self.window)
+            inr.intro_help_sprite.empty()
+            inr.help_play_bt_sprite.empty()
+
+
+        # Drawing the widgets
+        inr.help_bt_sprite.draw(self.window)
+
+        inr.intro_text_sprite.draw(self.window)
+
+        # Check if the play bt has been pressed
+        if self.play_bt_pressed == True:
+            self.window.fill(self.window_intro_bg)
+
+        # Updating bts
+        self.play_bt_pressed = self.main_play_bt.update()
+        self.help__play_bt_pressed = self.help_play_bt.update()
+        self.help_bt_pressed = self.help_bt.update()
+
+        # Putting a custom cursor
+        pg.mouse.set_cursor(self.cursor)
+
+        # Updating the game
+        pg.display.update()
 
     def Next_question(self):
         if self.question_number < self.question_len_main: # Minusing 1 from the original list of question to keep it below the last question:
@@ -254,13 +304,17 @@ class Game:
 
         # Setting up the window
         self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT))
-        pg.display.set_caption("QUIZ RACE")
+        pg.display.set_caption("SHARK DASH")
         self.ICON_IMAGE = pg.image.load("icon.png")
         pg.display.set_icon(self.ICON_IMAGE)
         self.clock = pg.time.Clock()
 
         # Colours for the window
         self.window_bg = (247, 247, 247)
+        self.window_intro_bg =  (26, 83, 92)
+
+        # Window state like intro or game in active mode
+        self.window_state = False
 
         # Custom cursor
         self.image_of_cursor = pg.image.load("cursor (1).png") # image of the cursor
@@ -347,12 +401,49 @@ class Game:
         self.exit_message_2 = ex.Exitmessage("Could not escape the Island.", "Try Again!", "crying.png")
         self.exit_message_3 = ex.Exitmessage("Hmmmmmmmmmmmmmmmmmmmmmmm", "Try Again!", "angry.png")
 
+        # Intro screen
+        # Intro buttons
+        self.main_play_bt = inr.Playbt("play_bg.png", 381, 501, "PLAY")
+        self.help_bt = inr.Helpbt("help bt  bg.png", 25, 25, "?", inr.play_text_colr, inr.help_text_size, inr.jura_bold)
+        self.help_play_bt = inr.HelpPlaybt("help_play_bt_bg.png", 365, 514, "Let's Play Now")
+        self.help_bt_pressed = False
+        self.help__play_bt_pressed = False
+        self.play_bt_pressed = False
+        # Intro texts
+        self.game_title =  inr.Introtext("SHARK DASH", 110, inr.jura_regular, 190, 76)
+        self.help_title =  inr.Introhelptext("Rules", 60, inr.jura_semibold, 26, 17)
+        self.rule_1 =  inr.Introhelptext("- Reach the island by answering certain number of question", 20, inr.jura_medium, 26, 103)
+        self.rule_2 =  inr.Introhelptext("- You are allowed to make one mistake only", 20, inr.jura_medium, 26, 152)
+        self.rule_3 =  inr.Introhelptext("- 30s time will provided for each question", 20, inr.jura_medium, 26, 201)
+        self.rule_4 =  inr.Introhelptext("- Last Rule, have fun", 20, inr.jura_medium, 26, 250)
+        # Intro help bg
+        self.help_bg = inr.Helpbg("help_bg.png", 130, 216)
+
+        # Adding the text to help part and also drawing it here to no repeat it
+        inr.intro_help_text_sprite.add(self.help_title)
+        inr.intro_help_text_sprite.add(self.rule_1)
+        inr.intro_help_text_sprite.add(self.rule_2)
+        inr.intro_help_text_sprite.add(self.rule_3)
+        inr.intro_help_text_sprite.add(self.rule_4)
+        inr.intro_help_text_sprite.draw(self.help_bg.image)
+        inr.intro_help_sprite.add(self.help_bg)
+        # adding the intro title and button the screen
+        inr.help_play_bt_sprite.add(self.help_play_bt)
+        inr.help_bt_sprite.add(self.help_bt)
+        # Adding the intro buttons
+        inr.play_bt_sprite.add(self.main_play_bt)
+        inr.intro_text_sprite.add(self.game_title)
+
         # User event to for moving to Next Question
         self.next_que_event = pg.USEREVENT + 1
 
+
     def looper(self):
         while True:
-            self.Main_stage()
+            if self.window_state == False:
+                self.intro()
+            elif self.window_state == True:
+                self.Main_stage()
             self.Shark_collied()
             self.Island_collied()
             self.clock.tick(self.FPS)
